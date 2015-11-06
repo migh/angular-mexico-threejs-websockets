@@ -33,7 +33,13 @@ module.exports.routes = {
   ***************************************************************************/
 
   '/': {
-    view: 'homepage'
+    controller: 'ngjsmx',
+    action: 'index'
+  },
+
+  '/device/:position/:orientation': {
+    controller: 'device',
+    action: 'index'
   }
 
   /***************************************************************************
