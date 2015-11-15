@@ -37,9 +37,9 @@ module.exports.routes = {
     action: 'index'
   },
 
-  '/device/:position/:orientation': {
-    controller: 'device',
-    action: 'index'
+  '/device': {
+    controller: 'ngjsmx',
+    action: 'control'
   }
 
   /***************************************************************************
