@@ -1,6 +1,56 @@
 (function(){
     ngjsmx = angular.module('ngjsmx');
 
+    ngjsmx.directive('threeModel', ['$window', 'ThreeModel', function(window,ThreeModel) {
+        var threeModelObject = {
+            restrict: 'A',
+            link: function (s,e,a) {
+                var ngl = window.angular.element;
+                var container = e[0];
+
+                var processAspectRatio = function(aspectRatio) {
+                    var aR = aspectRatio.split(':',2);
+                    return {
+                        width: aR[0],
+                        height: aR[1]
+                    }
+                };
+
+                if ( ! Detector.webgl ) {
+                    Detector.addGetWebGLMessage();
+                    container.innerHTML = "";
+                } else {
+                    var canvas = window.document.createElement('canvas');
+                    var aspectRatioAttr = a.aspectRatio || '16:9';
+                    var aspectRatio = processAspectRatio(aspectRatioAttr);
+                    var canvasProperties = {
+                        element: canvas,
+                        width: container.clientWidth,
+                        height: Math.round( (container.clientWidth * ( aspectRatio.height / aspectRatio.width )) )
+                    };
+
+                    ngl(canvas).css({ width: canvasProperties.width+'px', height: canvasProperties.height+'px' });
+                    container.appendChild(canvas);
+
+                    ThreeModel.init(canvasProperties);
+                }
+            }
+        };
+
+        return threeModelObject;
+    }]);
+
+    ngjsmx.directive('userList', function() {
+        var userListObject = {
+            restrict: 'A',
+            link: function (s,e,a) {
+                console.log('Inside User List');
+            }
+        };
+
+        return userListObject;
+    });
+
     ngjsmx.directive('deviceManager', function() {
         var deviceManagerObject = {
             restrict: 'A',
@@ -10,14 +60,10 @@
 
                 var joinCb = function( res, rwjson ){
                     self.socketId = res.id;
-                    console.log(self.socketId);
+                    s.$emit('idReady',{id: self.socketId});
                 };
 
                 ws.joinRoom(joinCb);
-
-                this.getSocketId = function () {
-                    return self.socketId;
-                }
             }]
         };
 
@@ -29,6 +75,15 @@
             restrict: 'A',
             require: '^^deviceManager',
             link: function(s,e,a, devManager) {
+                s.state = 'No Conectado';
+                s.id = null;
+
+                var socketReady = function (ev,data) {
+                    s.state = 'Conectado';
+                    s.id = data.id;
+                };
+
+                s.$on('idReady', socketReady);
             },
             templateUrl: '../../ngTemplates/state.html'
         };
@@ -41,7 +96,6 @@
             restrict: 'A',
             require: '^^deviceManager',
             link: function(s,e,a) {
-                console.log('Inside dotMap');
             },
             templateUrl: '../../ngTemplates/map.html'
         };
@@ -49,11 +103,16 @@
         return deviceMapObject;
     }]);
 
-    ngjsmx.directive('dotSensors',['$window', function(window) {
+    ngjsmx.directive('deviceSensors',['$window', 'sailsIO', function(window, ws) {
         var deviceSensorsObject = {
             restrict: 'A',
             require: '^^deviceManager',
             link: function(s,e,a) {
+                var watcherId;
+                // Update interval in milliseconds
+                var updateInterval = 2000;
+                var socketId;
+
                 s.orientation = {};
                 s.orientation.absolute = 'NA';
                 s.orientation.alpha = 'NA';
@@ -77,7 +136,7 @@
                         console.error('Geolocation not enabled');
                     };
 
-                    var watcherId = window.navigator.geolocation.watchPosition(success, error, {enableHighAccuracy: true});
+                    watcherId = window.navigator.geolocation.watchPosition(success, error, {enableHighAccuracy: true});
                 };
 
                 // All this could be inside a sensors service
@@ -94,6 +153,33 @@
                     getGeolocation();
                 }
                 window.addEventListener('deviceorientation', handleOrientation);
+
+                var getData = function (id) {
+                    return {
+                        id: id,
+                        orientation: {
+                            absolute: s.orientation.absolute,
+                            alpha: s.orientation.alpha,
+                            beta: s.orientation.beta,
+                            gamma: s.orientation.gamma
+                        },
+                        location: {
+                            lat: s.geolocation.lat,
+                            lng: s.geolocation.lng
+                        }
+                    };
+                }
+                var intervalId;
+
+                var socketReady = function (ev,data) {
+                    socketId = data.id;
+                    intervalId = window.setInterval(function(){
+                        ws.updateState(getData(socketId));
+                    },updateInterval);
+                };
+
+                s.$on('idReady', socketReady);
+
             },
             templateUrl: '../../ngTemplates/sensors.html'
         };

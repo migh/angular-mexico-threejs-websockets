@@ -1,3 +1,10 @@
 <div class="device-state">
-    <span><strong></strong><strong></strong></span>
+    <div class="row">
+        <div class="col s12 m6">
+            <p><strong>Estado</strong>: {{ state }}</p>
+        </div>
+        <div class="col s12 m6" ng-show="id !== null">
+            <p><strong> Socket Id</strong>: {{ id }}</p>
+        </div>
+    </div>
 </div>

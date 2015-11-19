@@ -8429,4 +8429,11 @@ body {
 strong {
   font-weight: bolder; }
 
+.map-area {
+  width: 300px;
+  height: 400px;
+  margin: auto;
+  border: 1px dashed #76ff16;
+  background-color: rgba(118, 255, 22, 0.2); }
+
 /*# sourceMappingURL=style.css.map */

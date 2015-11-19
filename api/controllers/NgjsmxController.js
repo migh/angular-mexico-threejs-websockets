@@ -51,6 +51,8 @@ module.exports = {
                     });
                     break;
                 case 'updateState':
+                    var data = req.param('data');
+                    sails.sockets.emit( socketMaster.id, 'deviceData', data);
                     break;
                 default:
             }

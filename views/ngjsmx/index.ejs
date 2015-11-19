@@ -1,8 +1,18 @@
 <div class="container" ng-controller="visorCtrl">
     <div class="row">
-        <div class="col s12 blue">
-            <h1>Here'll be the visor!</h1>
-            <button class="btn blue waves-effect" ng-click="reset()">Reset</button>
+        <div class="col s12 blue center-align">
+            <h1>Angular & Three.js</h1>
+            <button class="btn blue lighten-2 waves-effect" ng-click="reset()">Reset</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12 m9">
+            <div three-model="" data-aspect-ratio="16:9">
+            </div>
+        </div>
+        <div class="col s12 m3 orange accent-4">
+            <h4 class="center-align">Usuarios</h4>
+            <div user-list=""></div>
         </div>
     </div>
 </div>
