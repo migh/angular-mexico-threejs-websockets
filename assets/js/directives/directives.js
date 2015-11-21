@@ -1,7 +1,7 @@
 (function(){
     ngjsmx = angular.module('ngjsmx');
 
-    ngjsmx.directive('threeModel', ['$window', 'ThreeModel', function(window,ThreeModel) {
+    ngjsmx.directive('threeModel', ['$window', 'ThreeModel', 'sailsIO', function(window,ThreeModel, ws) {
         var threeModelObject = {
             restrict: 'A',
             link: function (s,e,a) {
@@ -33,6 +33,13 @@
                     container.appendChild(canvas);
 
                     ThreeModel.init(canvasProperties);
+
+                    var onDataFn = function(data) {
+                        // We are currently ignoring position data
+                        ThreeModel.setMarkerPosition(data.id, data.orientation);
+                    };
+
+                    ws.setDeviceDataFn(onDataFn);
                 }
             }
         };

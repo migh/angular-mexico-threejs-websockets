@@ -13,10 +13,32 @@
         return data;
     }
 
+    var Pin = function(){
+        var radius = 2;
+        var height = 9;
+        var pinColor = 0x3f8142;
+
+        var group = new THREE.Object3D();
+        var cylinderGeometry = new THREE.CylinderGeometry( radius, 0, height, 32 ).translate(0, (height/2), 0);
+        var cylinderMaterial = new THREE.MeshPhongMaterial( { color: pinColor, specular: pinColor, shininess: 30, shading: THREE.FlatShading } );
+        var cylinder = new THREE.Mesh( cylinderGeometry, cylinderMaterial );
+        group.add( cylinder );
+        var sphereGeometry = new THREE.SphereGeometry( radius, 32, 32 ).translate(0, height, 0);
+        var sphereMaterial = new THREE.MeshPhongMaterial( { color: pinColor, specular: pinColor, shininess: 30, shading: THREE.FlatShading } );
+        var sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
+        group.add( sphere );
+
+        return group;
+    };
+
     var ThreeModel = function(){
+        this.markers = {};
+        this.markersObject = new THREE.Object3D();
     };
 
     ThreeModel.prototype = {
+        markers: null,
+        markersObject: null
     };
 
     ThreeModel.prototype.init = function(canvasProperties){
@@ -27,13 +49,15 @@
 
         scene = new THREE.Scene();
 
+        camera.position.x = 0;
+        camera.position.y = 50;
+        camera.position.z = 50;
+
         controls = new THREE.OrbitControls( camera );
 
         data = diamondSquareHeight( worldWidth );
 
-        camera.position.y = 510;
-
-        var geometry = new THREE.PlaneBufferGeometry( 7500, 7500, worldWidth - 1, worldDepth - 1 );
+        var geometry = new THREE.PlaneBufferGeometry( 100, 100, worldWidth - 1, worldDepth - 1 );
         geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
 
         var vertices = geometry.attributes.position.array;
@@ -44,8 +68,21 @@
 
         }
 
-        mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( {wireframe:true } ) );
+        mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( {color: 0x423f81, specular: 0x423f81, shininess: 30, shading: THREE.FlatShading, side: THREE.DoubleSide} ) );
         scene.add( mesh );
+
+        /**/
+//        var pin2 = new Pin;
+//        pin2.position.set(50, 0, 50);
+//        scene.add( pin2 );
+
+        /**/
+
+        var light = new THREE.DirectionalLight( 0xffffff, 1 );
+        light.position.set(1,1,1);
+        scene.add( light );
+
+        scene.add( this.markersObject );
 
         renderer = new THREE.WebGLRenderer({canvas: canvasProperties.element});
         renderer.setPixelRatio( canvasProperties.width / canvasProperties.height );
@@ -61,6 +98,36 @@
         };
 
         animate();
+    };
+
+    ThreeModel.prototype.setMarkerPosition = function(id,orientation){
+        console.log(orientation);
+        var i, exist, children = this.markersObject.children;
+
+        // rot units are degrees and Euler are gradient
+        var getEulerX = function(rotX){
+            return (Math.PI/180)* rotX;
+        };
+
+        // rot units are degrees and Euler are gradient
+        var getEulerZ = function(rotZ){
+            return - (Math.PI/180)* rotZ;
+        };
+
+        for(i=0;i<children.length;i++){
+            if (children[i].name === id){
+                exist = children[i];
+                break;
+            }
+        }
+
+        if (exist) {
+            exist.rotation.set(getEulerX(orientation.beta),0,getEulerZ(orientation.gamma),'XYZ')
+        } else {
+            var pin = new Pin;
+            pin.name = id;
+            this.markersObject.add( pin );
+        }
     };
 
     window.ThreeModel = ThreeModel;

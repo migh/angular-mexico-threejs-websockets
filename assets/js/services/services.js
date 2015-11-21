@@ -4,9 +4,12 @@
     ngjsmx.factory('sailsIO',['$window', function(window){
         var ws = window.io.socket;
 
-        ws.on('deviceData', function (data) {
+        var deviceDataFn = function (data) {
+            console.log('Perro');
             console.log(data);
-        });
+        };
+
+        ws.on('deviceData', function(data){ deviceDataFn(data) });
 
         var newRoomHandler = function( resData, jwres){
             console.log(resData);
@@ -33,6 +36,9 @@
             updateState: function(data){
                 ws.get('/device',{m: 'updateState', data: data});
 //                console.log(data);
+            },
+            setDeviceDataFn: function(fn){
+                deviceDataFn = fn;
             }
         };
     }]);
