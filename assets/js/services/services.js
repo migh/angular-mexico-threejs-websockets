@@ -5,7 +5,6 @@
         var ws = window.io.socket;
 
         var deviceDataFn = function (data) {
-            console.log('Perro');
             console.log(data);
         };
 

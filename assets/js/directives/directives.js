@@ -16,6 +16,8 @@
                     }
                 };
 
+                s.refreshId = 'Nadie';
+
                 if ( ! Detector.webgl ) {
                     Detector.addGetWebGLMessage();
                     container.innerHTML = "";
@@ -37,11 +39,16 @@
                     var onDataFn = function(data) {
                         // We are currently ignoring position data
                         ThreeModel.setMarkerPosition(data.id, data.orientation);
+
+                        s.$apply(function () {
+                            s.refreshId = data.id;
+                        });
                     };
 
                     ws.setDeviceDataFn(onDataFn);
                 }
-            }
+            },
+            templateUrl: '../../ngTemplates/threemodel.html'
         };
 
         return threeModelObject;
@@ -156,10 +163,11 @@
                     });
                 };
 
+                window.addEventListener('deviceorientation', handleOrientation);
+
                 if (window.navigator.geolocation){
                     getGeolocation();
                 }
-                window.addEventListener('deviceorientation', handleOrientation);
 
                 var getData = function (id) {
                     return {

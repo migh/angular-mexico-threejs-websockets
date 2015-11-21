@@ -71,13 +71,6 @@
         mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( {color: 0x423f81, specular: 0x423f81, shininess: 30, shading: THREE.FlatShading, side: THREE.DoubleSide} ) );
         scene.add( mesh );
 
-        /**/
-//        var pin2 = new Pin;
-//        pin2.position.set(50, 0, 50);
-//        scene.add( pin2 );
-
-        /**/
-
         var light = new THREE.DirectionalLight( 0xffffff, 1 );
         light.position.set(1,1,1);
         scene.add( light );
@@ -101,7 +94,6 @@
     };
 
     ThreeModel.prototype.setMarkerPosition = function(id,orientation){
-        console.log(orientation);
         var i, exist, children = this.markersObject.children;
 
         // rot units are degrees and Euler are gradient
@@ -124,8 +116,10 @@
         if (exist) {
             exist.rotation.set(getEulerX(orientation.beta),0,getEulerZ(orientation.gamma),'XYZ')
         } else {
+            var posX = (Math.random()*1000)%80 - 40, posZ = (Math.random()*1000)%80 - 40;
             var pin = new Pin;
             pin.name = id;
+            pin.position.set(posX,0,posZ);
             this.markersObject.add( pin );
         }
     };
