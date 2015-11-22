@@ -29,14 +29,20 @@ Funciona con [Sails](http://sailsjs.org) como servidor. Sigue las instrucciones 
 3. On home directory run
    En el directorio base corre
 
-    `sails lift --verbose
+```
+    sails lift --verbose
+```
 
 4. Open localhost on port 1337 for main window
    Abre localhost en el puerto 1337 desde el navegador principal
 
-    `http://localhost:1337/
+```
+    http://localhost:1337/
+```
    
 5. On device open /device path, with the same host and port
    En el dispositivo móvil abre /device, con el mismo puerto y navegador
    
-    `http://localhost:1337/device/
+```
+    http://localhost:1337/device/
+```
