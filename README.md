@@ -11,26 +11,31 @@ segundos.
 It work with [Sails](http://sailsjs.org) as server. The following steps are needed to run it.
 Funciona con [Sails](http://sailsjs.org) como servidor. Sigue las instrucciones para usarlo.
 
-## You have to clone the repository - Necesitas clonar el repo
+## You have to clone the repository
+## Necesitas clonar el repo
 ```
 git clone https://github.com/migh/angular-mexico-threejs-websockets.git
 ```   
-## You have to install node_modules and bower_components - Primero es necesario instalar node_modules y bower_components
+## You have to install node_modules and bower_components
+## Primero es necesario instalar node_modules y bower_components
 ```
     cd angular-mexico-threejs-websockets
     npm install
     cd assets
     bower install
 ```
-## On home directory run - En el directorio base corre
+## On home directory run
+## En el directorio base corre
 ```
     sails lift --verbose
 ```
-## Open localhost on port 1337 for main window - Abre localhost en el puerto 1337 desde el navegador principal
+## Open localhost on port 1337 for main window
+## Abre localhost en el puerto 1337 desde el navegador principal
 ```
     http://localhost:1337/
 ```
-## On device open /device path, with the same host and port - En el dispositivo móvil abre /device, con el mismo puerto y navegador
+## On device open /device path, with the same host and port
+## En el dispositivo móvil abre /device, con el mismo puerto y navegador
 ```
     http://localhost:1337/device/
 ```
