@@ -12,7 +12,7 @@ var socketList = [];
 module.exports = {
 	// Visor
 	index: function (req, res) {
-		return res.view('ngjsmx/index',{title: '13º Meetup Angular Js Mexico: Angular JS, WebGL y WebSockets'});
+		return res.view('ngjsmx/index',{title: '4º Meetup WebGL Mexico: Angular JS, WebGL y WebSockets'});
 	},
 	control: function (req, res) {
 
